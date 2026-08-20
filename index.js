@@ -1,9 +1,9 @@
 const TuyAPI = require('tuyapi');
 
-// Datapointy ověřené čtením ze Salente SummerICE9 (protokol 3.5):
-//   1 = zapnuto (bool)          2 = cílová teplota (16–32 °C)
-//   3 = aktuální teplota (°C)   4 = režim ("Cool" / "Dry" / "Wind")
-//   5 = otáčky ventilátoru ("Low" / "High")
+// Datapoints verified by reading from a Salente SummerICE9 (protocol 3.5):
+//   1 = power (bool)            2 = target temperature (16–32 °C)
+//   3 = current temperature     4 = mode ("Cool" / "Dry" / "Wind")
+//   5 = fan speed ("Low" / "High")
 const DP = { POWER: '1', TARGET: '2', CURRENT: '3', MODE: '4', FAN: '5' };
 
 let hap;
@@ -11,7 +11,7 @@ let hap;
 class SalenteAC {
   constructor(log, config) {
     this.log = log;
-    this.name = config.name || 'Klimatizace';
+    this.name = config.name || 'Air Conditioner';
     this.minTemp = config.minTemperature || 16;
     this.maxTemp = config.maxTemperature || 32;
     this.dps = {};
@@ -27,7 +27,7 @@ class SalenteAC {
 
     this.dev.on('connected', () => {
       this.connected = true;
-      this.log.info(`Připojeno k ${this.name} (${config.ip})`);
+      this.log.info(`Connected to ${this.name} (${config.ip})`);
     });
     this.dev.on('disconnected', () => {
       this.connected = false;
@@ -52,7 +52,7 @@ class SalenteAC {
       .onGet(() => (this.dps[DP.POWER] ? 3 : 0)); // 3 = COOLING, 0 = INACTIVE
 
     this.svc.getCharacteristic(C.TargetHeaterCoolerState)
-      .setProps({ validValues: [2] }) // zařízení umí pouze chlazení
+      .setProps({ validValues: [2] }) // the unit can only cool
       .onGet(() => 2)
       .onSet(() => {});
 
@@ -105,8 +105,8 @@ class SalenteAC {
     }
   }
 
-  // Se zapnutím rovnou nastavíme režim chlazení — jinak by stroj mohl
-  // naskočit do posledního použitého režimu (odvlhčování / ventilátor).
+  // Setting cooling mode together with power, otherwise the unit would resume
+  // whatever mode it used last (dehumidify or fan only).
   async setActive(v) {
     try {
       await this.dev.set({ multiple: true, data: { [DP.POWER]: !!v, [DP.MODE]: 'Cool' } });

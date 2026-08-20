@@ -10,33 +10,33 @@
   <a href="LICENSE"><img src="https://img.shields.io/npm/l/homebridge-salente-ac.svg" alt="license"></a>
 </p>
 
-Homebridge plugin pro mobilní klimatizaci **Salente SummerICE9**. Ovládá ji
-**lokálně po LAN** přes Tuya protokol 3.5 — bez cloudu, bez závislosti na
-internetu a bez prodlužování trialu na Tuya IoT platformě.
+Homebridge plugin for the **Salente SummerICE9** portable air conditioner.
+Controls it **locally over the LAN** using Tuya protocol 3.5 — no cloud, no
+internet dependency and no Tuya IoT trial to keep renewing.
 
-## Proč vznikl
+## Why it exists
 
-Existující Tuya pluginy pro Homebridge se na tomhle zařízení rozpadají: naváží
-spojení a do vteřiny dostanou `ECONNRESET`. Ověřeno, že problém není v síti,
-klíči ani zařízení — knihovna [`tuyapi`](https://github.com/codetheweb/tuyapi)
-se stejnými údaji čte i zapisuje spolehlivě. Tenhle plugin proto staví přímo
-na ní.
+The existing Tuya plugins for Homebridge fall apart on this device: they open a
+connection and get `ECONNRESET` within a second. The network, the local key and
+the device itself were all ruled out — [`tuyapi`](https://github.com/codetheweb/tuyapi)
+reads and writes reliably with the very same credentials. So this plugin builds
+on it directly.
 
-## Instalace
+## Installation
 
 ```
 npm install -g homebridge-salente-ac
 ```
 
-## Konfigurace
+## Configuration
 
-Plugin má `config.schema.json`, takže se dá nastavit klikáním v Homebridge UI.
-Ručně vypadá konfigurace takto:
+The plugin ships a `config.schema.json`, so it can be set up through the
+Homebridge UI. By hand it looks like this:
 
 ```json
 {
   "accessory": "SalenteAC",
-  "name": "Klimatizace",
+  "name": "Air Conditioner",
   "id": "bfxxxxxxxxxxxxxxxxxxxx",
   "key": "xxxxxxxxxxxxxxxx",
   "ip": "192.168.1.140",
@@ -44,44 +44,44 @@ Ručně vypadá konfigurace takto:
 }
 ```
 
-| Pole | Výchozí | Popis |
+| Option | Default | Description |
 |---|---|---|
-| `id` | — | Virtual ID ze Smart Life → Device Information |
-| `key` | — | Lokální klíč; mění se při novém spárování |
-| `ip` | — | Doporučeno mít rezervovanou v DHCP |
-| `version` | `3.5` | Verze Tuya protokolu |
-| `minTemperature` | `16` | Spodní mez |
-| `maxTemperature` | `32` | Horní mez |
-| `pollInterval` | `15` | Interval dotazování v sekundách |
+| `id` | — | Virtual ID from Smart Life → Device Information |
+| `key` | — | Local key; changes when the device is paired again |
+| `ip` | — | Reserve it in your router's DHCP |
+| `version` | `3.5` | Tuya protocol version |
+| `minTemperature` | `16` | Lower bound |
+| `maxTemperature` | `32` | Upper bound |
+| `pollInterval` | `15` | Poll interval in seconds |
 
-`id` a `key` získáš přes `npx @tuyapi/cli wizard`.
+Get `id` and `key` with `npx @tuyapi/cli wizard`.
 
-## Co vystavuje
+## What it exposes
 
-HomeKit službu `HeaterCooler`:
+A HomeKit `HeaterCooler` service:
 
-| Charakteristika | Datapoint |
+| Characteristic | Datapoint |
 |---|---|
 | Active | `1` |
 | CurrentTemperature | `3` |
 | CoolingThresholdTemperature | `2` (16–32 °C) |
 | RotationSpeed | `5` (`Low` / `High`) |
 
-Se zapnutím se rovnou nastaví režim chlazení (datapoint `4` = `Cool`), aby stroj
-nenaskočil do naposledy použitého odvlhčování nebo ventilátoru.
+Turning the unit on also sets cooling mode (datapoint `4` = `Cool`) so it does
+not resume the dehumidify or fan-only mode it used last.
 
-Zařízení neumí topit, takže `TargetHeaterCoolerState` nabízí pouze chlazení.
-Odvlhčování a samostatný ventilátor vystavené nejsou — `HeaterCooler` pro ně
-nemá místo.
+The unit cannot heat, so `TargetHeaterCoolerState` offers cooling only.
+Dehumidify and fan-only are not exposed — `HeaterCooler` has no room for them.
 
-## Poznámky
+## Notes
 
-Hodnoty se drží v cache a na pozadí se obnovují, takže HomeKit nikdy nečeká na
-síť. Při výpadku spojení se plugin sám připojuje znovu.
+State is cached and refreshed in the background, so HomeKit never waits on the
+network. The plugin reconnects on its own if the connection drops.
 
-Protokol 3.5 je u tohoto zařízení podmínkou — s 3.3 a 3.4 spojení selže. Pokud
-máš jiný kus a nefunguje ti to, zkus prohodit `version`.
+Protocol 3.5 is required for this device — 3.3 and 3.4 both fail to establish a
+usable session. If you have a different unit and it does not work, try changing
+`version`.
 
-## Licence
+## License
 
 MIT

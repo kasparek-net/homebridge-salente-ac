@@ -1,13 +1,17 @@
 # Changelog
 
+## 1.0.2
+
+- Everything is now in English: code comments, log messages, config labels and docs
+
 ## 1.0.1
 
-- README: logo, odznaky a tabulka konfiguračních voleb
-- Přidán `CHANGELOG.md` a `.npmignore`
+- README: logo, badges and a configuration reference table
+- Added `CHANGELOG.md` and `.npmignore`
 
 ## 1.0.0
 
-- První vydání
-- Lokální ovládání po LAN přes Tuya protokol 3.5
-- HomeKit `HeaterCooler`: zapnutí, aktuální i cílová teplota, otáčky ventilátoru
-- Cache s pollingem na pozadí a automatické obnovení spojení
+- Initial release
+- Local LAN control over Tuya protocol 3.5
+- HomeKit `HeaterCooler`: power, current and target temperature, fan speed
+- Cached state with background polling and automatic reconnect
