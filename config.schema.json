@@ -1,0 +1,49 @@
+{
+  "pluginAlias": "SalenteAC",
+  "pluginType": "accessory",
+  "singular": false,
+  "headerDisplay": "Lokální ovládání mobilní klimatizace Salente SummerICE9 po LAN (Tuya, protokol 3.5). `id` a `key` získáš přes `npx @tuyapi/cli wizard`.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Název",
+        "type": "string",
+        "default": "Klimatizace",
+        "required": true
+      },
+      "id": {
+        "title": "Tuya device ID",
+        "type": "string",
+        "required": true,
+        "description": "Virtual ID ze Smart Life → Device Information."
+      },
+      "key": {
+        "title": "Tuya local key",
+        "type": "string",
+        "required": true,
+        "description": "Mění se při odpárování a novém spárování zařízení."
+      },
+      "ip": {
+        "title": "IP adresa",
+        "type": "string",
+        "required": true,
+        "format": "ipv4",
+        "description": "Doporučeno mít v routeru rezervovanou přes DHCP."
+      },
+      "version": {
+        "title": "Verze protokolu",
+        "type": "string",
+        "default": "3.5",
+        "oneOf": [
+          { "title": "3.5", "enum": ["3.5"] },
+          { "title": "3.4", "enum": ["3.4"] },
+          { "title": "3.3", "enum": ["3.3"] }
+        ]
+      },
+      "minTemperature": { "title": "Minimální teplota (°C)", "type": "integer", "default": 16 },
+      "maxTemperature": { "title": "Maximální teplota (°C)", "type": "integer", "default": 32 },
+      "pollInterval": { "title": "Interval dotazování (s)", "type": "integer", "default": 15, "minimum": 5 }
+    }
+  }
+}

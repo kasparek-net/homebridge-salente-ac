@@ -1,0 +1,23 @@
+{
+  "name": "homebridge-salente-ac",
+  "version": "1.0.0",
+  "description": "Homebridge plugin for Salente SummerICE9 portable air conditioner — local LAN control over Tuya protocol 3.5",
+  "main": "index.js",
+  "license": "MIT",
+  "author": { "name": "Jakub Kasparek" },
+  "repository": { "type": "git", "url": "git+https://github.com/kasparek-net/homebridge-salente-ac.git" },
+  "homepage": "https://github.com/kasparek-net/homebridge-salente-ac#readme",
+  "bugs": { "url": "https://github.com/kasparek-net/homebridge-salente-ac/issues" },
+  "engines": { "homebridge": ">=1.6.0 || ^2.0.0", "node": ">=18.0.0" },
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "tuya",
+    "air-conditioner",
+    "salente",
+    "smartlife",
+    "local"
+  ],
+  "files": ["index.js", "config.schema.json", "README.md", "LICENSE"],
+  "dependencies": { "tuyapi": "^7.7.0" }
+}
